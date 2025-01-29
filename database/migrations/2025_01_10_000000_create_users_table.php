@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instance_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
