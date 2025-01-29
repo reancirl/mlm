@@ -1,0 +1,98 @@
+models:
+  Employee:
+    position: string
+    contact_info: string nullable
+    employment_type: enum:full-time,part-time,contract
+    start_date: date
+    salary: decimal:8,2 nullable
+    sss_number: string nullable
+    pagibig_number: string nullable
+    philhealth_number: string nullable
+    user_id: foreignId nullable # Links to the User model
+    timestamps: true
+    relationships:
+      belongsTo: 'Instance, User'
+      hasMany: 'Attendance, LeaveRequest, Payslip'
+
+  Attendance:
+    date: date
+    time_in: time nullable
+    time_out: time nullable
+    status: enum:present,absent,leave,half-day
+    employee_id: foreignId # Relationship with Employee
+    timestamps: true
+    relationships:
+      belongsTo: 'Employee'
+
+  LeaveRequest:
+    leave_type: enum:vacation,sick,emergency,others
+    start_date: date
+    end_date: date
+    status: enum:pending,approved,rejected
+    reason: text nullable
+    employee_id: foreignId # Relationship with Employee
+    instance_id: foreignId # Relationship with Instance
+    timestamps: true
+    relationships:
+      belongsTo: 'Employee, Instance'
+
+  Payslip:
+    basic_salary: decimal:8,2
+    deductions: decimal:8,2 nullable
+    sss_contribution: decimal:8,2 nullable
+    pagibig_contribution: decimal:8,2 nullable
+    philhealth_contribution: decimal:8,2 nullable
+    overtime: decimal:8,2 nullable
+    net_pay: decimal:8,2
+    period_start: date
+    period_end: date
+    generated_at: timestamp
+    employee_id: foreignId # Relationship with Employee
+    instance_id: foreignId # Relationship with Instance
+    timestamps: true
+    relationships:
+      belongsTo: 'Employee, Instance'
+
+controllers:
+  EmployeeController:
+    resource: all
+    methods:
+      index: "return view('employees.index', compact('employees'));"
+      store: "Employee::create($request->validated());"
+      update: "Employee::findOrFail($id)->update($request->validated());"
+      destroy: "Employee::findOrFail($id)->delete();"
+
+  AttendanceController:
+    resource: all
+    methods:
+      index: "return view('attendances.index', compact('attendances'));"
+      store: "Attendance::create($request->validated());"
+      update: "Attendance::findOrFail($id)->update($request->validated());"
+      destroy: "Attendance::findOrFail($id)->delete();"
+
+  LeaveRequestController:
+    resource: all
+    methods:
+      index: "return view('leave-requests.index', compact('leaveRequests'));"
+      store: "LeaveRequest::create($request->validated());"
+      update: "LeaveRequest::findOrFail($id)->update($request->validated());"
+      destroy: "LeaveRequest::findOrFail($id)->delete();"
+
+  PayslipController:
+    resource: all
+    methods:
+      index: "return view('payslips.index', compact('payslips'));"
+      store: "Payslip::create($request->validated());"
+      update: "Payslip::findOrFail($id)->update($request->validated());"
+      destroy: "Payslip::findOrFail($id)->delete();"
+
+routes:
+  web:
+    employees:
+      resource: EmployeeController
+    attendances:
+      resource: AttendanceController
+    leave-requests:
+      resource: LeaveRequestController
+    payslips:
+      resource: PayslipController

@@ -1,0 +1,30 @@
+created:
+    - app/Http/Controllers/EmployeeController.php
+    - app/Http/Controllers/AttendanceController.php
+    - app/Http/Controllers/LeaveRequestController.php
+    - app/Http/Controllers/PayslipController.php
+    - database/factories/EmployeeFactory.php
+    - database/factories/AttendanceFactory.php
+    - database/factories/LeaveRequestFactory.php
+    - database/factories/PayslipFactory.php
+    - database/migrations/2025_01_12_075917_create_employees_table.php
+    - database/migrations/2025_01_12_075918_create_attendances_table.php
+    - database/migrations/2025_01_12_075919_create_leave_requests_table.php
+    - database/migrations/2025_01_12_075920_create_payslips_table.php
+    - app/Models/Employee.php
+    - app/Models/Attendance.php
+    - app/Models/LeaveRequest.php
+    - app/Models/Payslip.php
+    - tests/Feature/Http/Controllers/EmployeeControllerTest.php
+    - tests/Feature/Http/Controllers/AttendanceControllerTest.php
+    - tests/Feature/Http/Controllers/LeaveRequestControllerTest.php
+    - tests/Feature/Http/Controllers/PayslipControllerTest.php
+updated:
+    - routes/web.php
+models:
+    Instance: { name: string }
+    User: { instance_id: 'biginteger unsigned nullable', name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Employee: { first_name: string, middle_namename: 'string nullable', last_name: string, position: string, contact_info: 'string nullable', employment_type: 'enum:full-time,part-time,contract', start_date: date, salary: 'decimal:8,2 nullable', sss_number: 'string nullable', pagibig_number: 'string nullable', philhealth_number: 'string nullable', instance_id: foreignId, user_id: 'foreignId nullable', timestamps: timestamps, relationships: { belongsTo: 'Instance, User', hasMany: 'Attendance, LeaveRequest, Payslip' } }
+    Attendance: { date: date, time_in: 'time nullable', time_out: 'time nullable', status: 'enum:present,absent,leave,half-day', employee_id: foreignId, timestamps: timestamps, relationships: { belongsTo: Employee } }
+    LeaveRequest: { leave_type: 'enum:vacation,sick,emergency,others', start_date: date, end_date: date, status: 'enum:pending,approved,rejected', reason: 'text nullable', employee_id: foreignId, instance_id: foreignId, timestamps: timestamps, relationships: { belongsTo: 'Employee, Instance' } }
+    Payslip: { basic_salary: 'decimal:8,2', deductions: 'decimal:8,2 nullable', sss_contribution: 'decimal:8,2 nullable', pagibig_contribution: 'decimal:8,2 nullable', philhealth_contribution: 'decimal:8,2 nullable', overtime: 'decimal:8,2 nullable', net_pay: 'decimal:8,2', period_start: date, period_end: date, generated_at: timestamp, employee_id: foreignId, instance_id: foreignId, timestamps: timestamps, relationships: { belongsTo: 'Employee, Instance' } }
